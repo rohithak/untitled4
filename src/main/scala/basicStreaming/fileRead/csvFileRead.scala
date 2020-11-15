@@ -12,6 +12,15 @@ import org.apache.spark.sql.types.StringType
 
 object csvFileRead {
 
+  //spark session is a unified entry point for the spark application which is being built
+  //using spark session, users can access spark functionality with lesser number of constructs.
+  // once spark session is created, users can create DataFrame, DataSet, RDD, write Spark sql queries..
+
+  // master- this would set the Spark master URL to connect to,
+  // such as "local" to run locally,
+  // "local[4]" to run locally with 4 cores, or
+  // "spark://master:7077" to run on a Spark standalone cluster.
+  //for configuring this for an application, it is always better to load it from configuration file.
   val sparkSession = SparkSession
     .builder()
     .appName("netCat and file directory read")
@@ -20,6 +29,8 @@ object csvFileRead {
 
   def readFile() {
 
+    // read stream is the access point for DataStreamReader 
+    // DataStreamReader  - allowed users to describe  how spark streaming loads dataset from a streaming source
     val inputDF = sparkSession
       .readStream
       .format("csv")
@@ -27,7 +38,11 @@ object csvFileRead {
       .option("dateFormat", "MMM d yyyy")
       .schema(stocksSchema)
       .load("""D:\SparkStreaming\Test\SampleCSV""")
-      //Change directory according to env
+    //Change directory according to env
+
+    //awaitTermination = waits for the termination signal from user or terminates program on reception of exception
+    //upon reception of CTRL+C or SIGTERM, streaming context will be stopped.
+    //throw the reported error during the execution
 
     inputDF.writeStream
       .format("console")
