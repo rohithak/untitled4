@@ -17,12 +17,12 @@ object ncRead {
     val inputDF = sparkSession.readStream
       .format("socket")
       .option("host", "localhost")
-      .option("port", 12345)
+      .option("port", 1234)
       .load()
 
     val lessCharacter: DataFrame = inputDF.filter(length(col("value")).<=(5))
 
-    inputDF.writeStream
+    lessCharacter.writeStream
       .format("console")
       .outputMode("append")
       .start()
