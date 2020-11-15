@@ -1,6 +1,6 @@
-#Sample Spark streaming projects
+# Sample Spark streaming projects
 
-##Spark structured streaming API 
+## Spark structured streaming API 
 Its a high level API which helps to create data streams.
 It is a scalable and fault-tolerant stream processing engine built on top of spark sql engine.
 
