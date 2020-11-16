@@ -1,14 +1,14 @@
 package basicStreaming.fileRead
 
-import org.apache.spark.sql.{ DataFrame, SparkSession }
-import org.apache.spark.sql.functions._
+import scala.concurrent.duration.DurationInt
+
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.streaming.Trigger
-import scala.concurrent.duration._
-import org.apache.spark.sql.types.DoubleType
-import org.apache.spark.sql.types.StructType
-import org.apache.spark.sql.types.StructField
 import org.apache.spark.sql.types.DateType
+import org.apache.spark.sql.types.DoubleType
 import org.apache.spark.sql.types.StringType
+import org.apache.spark.sql.types.StructField
+import org.apache.spark.sql.types.StructType
 
 object csvFileRead {
 
@@ -44,9 +44,15 @@ object csvFileRead {
     //upon reception of CTRL+C or SIGTERM, streaming context will be stopped.
     //throw the reported error during the execution
 
+    // start method will return a streaming query
+      
+    //Trigger - create a batch every 2 seconds (specified time). Spark will query data (input direcotry) every 2 seconds and it will batch the incoming data in time that time window and apply transformation if any and output the result to a output sink 
     inputDF.writeStream
       .format("console")
       .outputMode("append")
+      .trigger(Trigger.ProcessingTime(2.seconds))
+      //trigger(Trigger.Once()) // single batch, then terminate
+      //trigger(Trigger.Continuous(interval)) // every 2 seconds will query - it is continuous processing of data, long running query, very low latency
       .start()
       .awaitTermination()
   }
