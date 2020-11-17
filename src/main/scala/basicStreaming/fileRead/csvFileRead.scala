@@ -23,7 +23,7 @@ object csvFileRead {
   //for configuring this for an application, it is always better to load it from configuration file.
   val sparkSession = SparkSession
     .builder()
-    .appName("netCat and file directory read")
+    .appName("file directory read")
     .master("local[2]")
     .getOrCreate()
 

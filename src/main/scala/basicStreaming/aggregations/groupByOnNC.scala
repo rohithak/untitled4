@@ -4,44 +4,39 @@ import scala.concurrent.duration.DurationInt
 
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.streaming.Trigger
-import org.apache.spark.sql.types.DateType
-import org.apache.spark.sql.types.DoubleType
-import org.apache.spark.sql.types.StringType
-import org.apache.spark.sql.types.StructField
-import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.Column
+import org.apache.spark.sql.DataFrame
 
 object groupByOnNC {
 
   val sparksess = SparkSession
     .builder()
-    .appName("ncReadAggregations")
+    .appName("groupByOnNC")
     .master("local[2]")
     .getOrCreate()
 
-  sparksess.sparkContext.setLogLevel("INFO")
+  sparksess.sparkContext.setLogLevel("ERROR")
 
-  def groupInputData() {
-    val inputDF = sparksess
-      .readStream
+  def groupNCContent(): Unit = {
+    val content: DataFrame = sparksess.readStream
       .format("socket")
       .option("host", "localhost")
-      .option("port", 9872)
+      .option("port", 12345)
       .load()
 
-    val aggregationDF = inputDF.select(col("value")).groupBy(col("value")).count
+    // counting occurrences of the "name" value
+    val contentAgg = content
+      .select(col("value"))
+      .groupBy(col("value")) // RelationalGroupedDataset - apply aggregate on top of this
+      .count()
 
-    val query = aggregationDF
-      .writeStream
+    contentAgg.writeStream
       .format("console")
-      .outputMode("complete")
-      .trigger(Trigger.ProcessingTime(2.seconds))
+      .outputMode("complete") // no water marking
       .start()
-
-    query.awaitTermination()
+      .awaitTermination()
   }
   def main(args: Array[String]): Unit = {
-    groupInputData()
+    groupNCContent()
   }
 }

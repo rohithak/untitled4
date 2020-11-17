@@ -4,13 +4,8 @@ import scala.concurrent.duration.DurationInt
 
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.streaming.Trigger
-import org.apache.spark.sql.types.DateType
-import org.apache.spark.sql.types.DoubleType
-import org.apache.spark.sql.types.StringType
-import org.apache.spark.sql.types.StructField
-import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.Column
+import org.apache.spark.sql.streaming.Trigger
 
 object ncReadAggregations {
 
@@ -67,9 +62,9 @@ object ncReadAggregations {
   }
 
   def main(args: Array[String]): Unit = {
-    //countLinesFromSocket()
+    countLinesFromSocket()
     //Any Agg function can be passed as argument
-    numericalAggregation(sum)
+    //numericalAggregation(sum)
 
   }
 
