@@ -7,13 +7,10 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.Column
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.catalyst.plans.JoinType
+import commonFunctions.createSparkSession
 
 object staticDFToStream {
-  val sparksess = SparkSession
-    .builder()
-    .appName("staticDFToStream")
-    .master("local[2]")
-    .getOrCreate()
+  val sparksess = createSparkSession.createSparkSess("staticDFToStream", "local[2]")
 
   sparksess.sparkContext.setLogLevel("ERROR")
 

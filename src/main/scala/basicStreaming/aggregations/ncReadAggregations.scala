@@ -6,14 +6,11 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.Column
 import org.apache.spark.sql.streaming.Trigger
+import commonFunctions.createSparkSession
 
 object ncReadAggregations {
 
-  val sparksess = SparkSession
-    .builder()
-    .appName("ncReadAggregations")
-    .master("local[2]")
-    .getOrCreate()
+  val sparksess = createSparkSession.createSparkSess("ncReadAggregations", "local[2]")
 
   sparksess.sparkContext.setLogLevel("INFO")
 

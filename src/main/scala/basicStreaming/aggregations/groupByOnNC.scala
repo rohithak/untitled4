@@ -6,14 +6,11 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.Column
 import org.apache.spark.sql.DataFrame
+import commonFunctions.createSparkSession
 
 object groupByOnNC {
 
-  val sparksess = SparkSession
-    .builder()
-    .appName("groupByOnNC")
-    .master("local[2]")
-    .getOrCreate()
+  val sparksess = createSparkSession.createSparkSess("groupByOnNC", "local[2]")
 
   sparksess.sparkContext.setLogLevel("ERROR")
 

@@ -9,6 +9,7 @@ import org.apache.spark.sql.types.DoubleType
 import org.apache.spark.sql.types.StringType
 import org.apache.spark.sql.types.StructField
 import org.apache.spark.sql.types.StructType
+import commonFunctions.createSparkSession
 
 object csvFileRead {
 
@@ -21,15 +22,12 @@ object csvFileRead {
   // "local[4]" to run locally with 4 cores, or
   // "spark://master:7077" to run on a Spark standalone cluster.
   //for configuring this for an application, it is always better to load it from configuration file.
-  val sparkSession = SparkSession
-    .builder()
-    .appName("file directory read")
-    .master("local[2]")
-    .getOrCreate()
+
+  val sparkSession = createSparkSession.createSparkSess("CSV file read as stream", "local[2]")
 
   def readFile() {
 
-    // read stream is the access point for DataStreamReader 
+    // read stream is the access point for DataStreamReader
     // DataStreamReader  - allowed users to describe  how spark streaming loads dataset from a streaming source
     val inputDF = sparkSession
       .readStream
@@ -45,8 +43,8 @@ object csvFileRead {
     //throw the reported error during the execution
 
     // start method will return a streaming query
-      
-    //Trigger - create a batch every 2 seconds (specified time). Spark will query data (input direcotry) every 2 seconds and it will batch the incoming data in time that time window and apply transformation if any and output the result to a output sink 
+
+    //Trigger - create a batch every 2 seconds (specified time). Spark will query data (input direcotry) every 2 seconds and it will batch the incoming data in time that time window and apply transformation if any and output the result to a output sink
     inputDF.writeStream
       .format("console")
       .outputMode("append")

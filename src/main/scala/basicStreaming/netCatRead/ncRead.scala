@@ -4,14 +4,11 @@ import org.apache.spark.sql.{ DataFrame, SparkSession }
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.streaming.Trigger
 import scala.concurrent.duration._
+import commonFunctions.createSparkSession
 
 object ncRead {
 
-  val sparkSession = SparkSession
-    .builder()
-    .appName("netCat and file directory read")
-    .master("local[2]")
-    .getOrCreate()
+  val sparkSession = createSparkSession.createSparkSess("netCat and file directory read", "local[2]")
 
   def readSocket() {
     val inputDF = sparkSession.readStream
